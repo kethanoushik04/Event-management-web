@@ -28,7 +28,6 @@ export default function EditEventModal({
   profiles = [],
   onCreateProfile,
 }) {
-  // ✅ initialize directly from event
   const [selectedProfiles, setSelectedProfiles] = useState(
     () => event?.profiles?.map((p) => p._id) || []
   );
@@ -44,7 +43,6 @@ export default function EditEventModal({
   const [newProfileName, setNewProfileName] = useState("");
   const [openDropdown, setOpenDropdown] = useState(false);
 
-  // 🔁 Reset when modal opens
   if (isOpen && event && selectedProfiles.length === 0) {
     setSelectedProfiles(event.profiles.map((p) => p._id));
     setStart(toLocalDatetime(event.startDate));
@@ -146,7 +144,6 @@ export default function EditEventModal({
           </div>
         )}
 
-        {/* Timezone */}
         <select
           className="border rounded p-2 w-full mb-4"
           value={timezone}
@@ -159,8 +156,7 @@ export default function EditEventModal({
           ))}
         </select>
 
-        {/* Dates */}
-        <input
+          <input
           type="datetime-local"
           className="border rounded p-2 w-full mb-2"
           value={start}

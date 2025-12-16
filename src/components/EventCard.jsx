@@ -102,8 +102,8 @@ export default function EventCard({
           isOpen={openEdit}
           onClose={() => setOpenEdit(false)}
           onUpdated={onEventUpdated}
-          profiles={profiles} // pass all profiles from parent
-          onCreateProfile={onCreateProfile} // allow creating new profiles
+          profiles={profiles} 
+          onCreateProfile={onCreateProfile} 
         />
       )}
 

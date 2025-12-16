@@ -50,7 +50,6 @@ export default function ViewLogsModal({ eventId, isOpen, onClose }) {
       hour12: true,
     });
 
-  // Date + time → 12-12-2025 10:15 AM
   const formatDateTime = (date) => {
     const d = new Date(date);
 
@@ -70,17 +69,14 @@ export default function ViewLogsModal({ eventId, isOpen, onClose }) {
   const renderValue = (field, value) => {
     if (!value) return "—";
 
-    // startDate / endDate → always show full date + time
     if (field === "startDate" || field === "endDate") {
       return formatDateTime(value);
     }
 
-    // timezone
     if (field === "timezone") {
       return getTimezoneLabel(value);
     }
 
-    // profiles (array)
     if (Array.isArray(value)) {
       return value.join(", ");
     }
@@ -88,12 +84,11 @@ export default function ViewLogsModal({ eventId, isOpen, onClose }) {
     return value;
   };
 
-  /* ---------- UI ---------- */
+
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
       <div className="bg-white rounded-lg p-6 shadow-xl w-full max-w-lg">
-        {/* Header */}
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-lg font-semibold">Event Update History</h2>
           <button
@@ -104,23 +99,19 @@ export default function ViewLogsModal({ eventId, isOpen, onClose }) {
           </button>
         </div>
 
-        {/* Logs */}
         <div className="max-h-80 overflow-y-auto space-y-3">
           {logs.length === 0 ? (
             <p className="text-gray-500 text-center">No updates yet</p>
           ) : (
             logs.map((log) => (
               <div key={log._id} className="border rounded-md p-3 bg-gray-50">
-                {/* Time */}
                 <div className="flex items-center text-sm text-gray-500 mb-1">
                   <FaClock className="mr-2" />
                   {formatDate(log.editedAt)} • {formatShortTime(log.editedAt)}
                 </div>
 
-                {/* Field */}
                 <p className="text-gray-700 font-medium">{log.field} updated</p>
 
-                {/* From */}
                 <p className="text-sm text-gray-600">
                   From:{" "}
                   <span className="font-medium">
@@ -128,7 +119,6 @@ export default function ViewLogsModal({ eventId, isOpen, onClose }) {
                   </span>
                 </p>
 
-                {/* To */}
                 <p className="text-sm text-gray-600">
                   To:{" "}
                   <span className="font-medium">

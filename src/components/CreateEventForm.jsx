@@ -133,7 +133,6 @@ export default function CreateEventForm({
       <h2 className="text-lg font-semibold mb-4">Create Event</h2>
 
       <form onSubmit={submit} className="space-y-5">
-        {/* PROFILE MULTI SELECT */}
         <div className="relative">
           <label className="text-sm font-medium">Profiles</label>
 
@@ -151,7 +150,6 @@ export default function CreateEventForm({
 
           {openProfileMenu && (
             <div className="absolute mt-2 w-full bg-white shadow-lg rounded p-3 z-20">
-              {/* SEARCH */}
               <input
                 className="border rounded px-2 py-1 w-full mb-2"
                 placeholder="Search profiles..."
@@ -159,7 +157,6 @@ export default function CreateEventForm({
                 onChange={(e) => setSearch(e.target.value)}
               />
 
-              {/* LIST */}
               <div className="max-h-40 overflow-y-auto border rounded p-2 mb-2">
                 {filteredProfiles.length > 0 ? (
                   filteredProfiles.map((p) => {
@@ -189,7 +186,6 @@ export default function CreateEventForm({
                 )}
               </div>
 
-              {/* ADD PROFILE */}
               <div className="flex gap-2">
                 <input
                   className="border rounded px-2 py-1 flex-1"
@@ -209,7 +205,6 @@ export default function CreateEventForm({
           )}
         </div>
 
-        {/* TIMEZONE */}
         <div>
           <label className="text-sm font-medium">Timezone</label>
           <select
@@ -225,7 +220,6 @@ export default function CreateEventForm({
           </select>
         </div>
 
-        {/* START DATE TIME */}
         <div>
           <label className="block text-sm font-medium">Start Date & Time</label>
 
@@ -263,7 +257,6 @@ export default function CreateEventForm({
           </div>
         </div>
 
-        {/* END DATE TIME */}
         <div>
           <label className="block text-sm font-medium">End Date & Time</label>
 
