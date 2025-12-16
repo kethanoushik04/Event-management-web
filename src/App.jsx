@@ -12,9 +12,15 @@ export default function App() {
 
   // Load all profiles
   const loadProfiles = async () => {
-    const res = await API.get("/profiles");
-    setProfiles(res.data);
-    if (!currentProfile && res.data.length > 0) setCurrentProfile(res.data[0]);
+    try {
+      const res = await API.get("/profiles");
+      setProfiles(res.data);
+      if (!currentProfile && res.data.length > 0) {
+        setCurrentProfile(res.data[0]);
+      }
+    } catch (err) {
+      console.error("Failed to load profiles", err);
+    }
   };
 
   // Load events for selected profile
@@ -23,8 +29,13 @@ export default function App() {
       setEvents([]);
       return;
     }
-    const res = await API.get(`/events/profile/${profileId}`);
-    setEvents(res.data);
+
+    try {
+      const res = await API.get(`/events/profile/${profileId}`);
+      setEvents(res.data);
+    } catch (err) {
+      console.error("Failed to load events", err);
+    }
   };
 
   // Load profiles on mount
@@ -37,11 +48,11 @@ export default function App() {
     if (currentProfile) loadEvents(currentProfile._id);
   }, [currentProfile]);
 
-  // Create profile API call
+  // Create profile
   const onCreateProfile = async (name) => {
     const res = await API.post("/profiles", { name });
     setProfiles((prev) => [res.data, ...prev]);
-    return res.data; // return new profile
+    return res.data;
   };
 
   return (
@@ -66,7 +77,6 @@ export default function App() {
 
             try {
               await API.post("/events", payload);
-              // Reload events for current profile
               await loadEvents(currentProfile._id);
               alert("Event created successfully");
             } catch (err) {
@@ -81,8 +91,8 @@ export default function App() {
           viewTimezone={viewTimezone}
           setViewTimezone={setViewTimezone}
           onEventUpdated={() => loadEvents(currentProfile._id)}
-          profiles={profiles} // add this
-          onCreateProfile={onCreateProfile} // add this
+          profiles={profiles}
+          onCreateProfile={onCreateProfile}
         />
       </div>
     </div>
