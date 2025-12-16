@@ -1,30 +1,41 @@
 import React, { useState } from "react";
-import Select from "react-select";
+import { FiChevronDown } from "react-icons/fi";
 
 export default function Header({
   profiles,
   onCreateProfile,
   currentProfile,
   setCurrentProfile,
+  setProfiles,
 }) {
-  const [openAdd, setOpenAdd] = useState(false);
-  const [profileName, setProfileName] = useState("");
+  const [openMenu, setOpenMenu] = useState(false);
+  const [search, setSearch] = useState("");
+  const [newProfileName, setNewProfileName] = useState("");
 
-  const options = profiles.map((p) => ({
-    label: p.name,
-    value: p._id,
-  }));
+  const filteredProfiles = profiles.filter((p) =>
+    p.name.toLowerCase().includes(search.toLowerCase())
+  );
 
-  const createProfile = async () => {
-    if (!profileName.trim()) return;
-    const created = await onCreateProfile(profileName);
+  const handleAddProfile = async () => {
+    if (!newProfileName.trim()) return;
+
+    const created = await onCreateProfile(newProfileName);
+
+    if (!created || !created._id) {
+      console.log("Profile creation failed");
+      return;
+    }
+
+    setProfiles((prev) => [created, ...prev]);
     setCurrentProfile(created);
-    setProfileName("");
-    setOpenAdd(false);
+
+    setNewProfileName("");
+    setSearch("");
+    setOpenMenu(false); // FIX
   };
 
   return (
-    <div className="p-6 bg-white shadow-sm flex justify-between items-center">
+    <div className="p-6 bg-white shadow-sm flex justify-between items-center relative">
       <div>
         <h1 className="text-xl font-semibold">Event Management</h1>
         <p className="text-gray-600 text-sm">
@@ -32,49 +43,61 @@ export default function Header({
         </p>
       </div>
 
-      <div className="w-72">
-        <Select
-          options={options}
-          placeholder="Select profile"
-          value={
-            currentProfile
-              ? { label: currentProfile.name, value: currentProfile._id }
-              : null
-          }
-          onChange={(sel) => {
-            const found = profiles.find((p) => p._id === sel.value);
-            setCurrentProfile(found);
-          }}
-          isClearable
-        />
+      <div className="relative w-72">
+        <div
+          className="border rounded px-3 py-2 flex justify-between items-center cursor-pointer bg-white"
+          onClick={() => setOpenMenu(!openMenu)}
+        >
+          <span className="text-gray-700">
+            {currentProfile ? currentProfile.name : "Select profile"}
+          </span>
+          <FiChevronDown size={18} className="text-gray-600" />
+        </div>
 
-        <div className="mt-3">
-          {!openAdd && (
-            <button
-              className="text-sm text-blue-600 underline"
-              onClick={() => setOpenAdd(true)}
-            >
-              + Create new profile
-            </button>
-          )}
+        {openMenu && (
+          <div className="absolute mt-2 w-full bg-white shadow-lg rounded p-3 z-20">
+            <input
+              className="border rounded px-2 py-1 w-full mb-2"
+              placeholder="Search profiles..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+            />
 
-          {openAdd && (
+            <div className="max-h-40 overflow-y-auto border rounded p-2 mb-2">
+              {filteredProfiles.length > 0 ? (
+                filteredProfiles.map((p) => (
+                  <div
+                    key={p._id}
+                    onClick={() => {
+                      setCurrentProfile(p);
+                      setOpenMenu(false);
+                    }}
+                    className="px-2 py-1 hover:bg-gray-100 cursor-pointer rounded"
+                  >
+                    {p.name}
+                  </div>
+                ))
+              ) : (
+                <p className="text-gray-500 text-sm">No profiles found</p>
+              )}
+            </div>
+
             <div className="flex gap-2">
               <input
-                className="border rounded px-2 py-1 w-full"
-                placeholder="Profile name"
-                value={profileName}
-                onChange={(e) => setProfileName(e.target.value)}
+                className="border rounded px-2 py-1 flex-1"
+                placeholder="New profile name"
+                value={newProfileName}
+                onChange={(e) => setNewProfileName(e.target.value)}
               />
               <button
-                onClick={createProfile}
-                className="bg-blue-600 text-white px-3 rounded"
+                onClick={handleAddProfile}
+                className="bg-blue-600 text-white px-3 py-1 rounded"
               >
                 Add
               </button>
             </div>
-          )}
-        </div>
+          </div>
+        )}
       </div>
     </div>
   );
