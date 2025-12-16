@@ -51,6 +51,7 @@ export default function App() {
   // Create profile
   const onCreateProfile = async (name) => {
     const res = await API.post("/profiles", { name });
+    
     setProfiles((prev) => [res.data, ...prev]);
     return res.data;
   };
