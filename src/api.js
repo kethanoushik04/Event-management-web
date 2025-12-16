@@ -7,7 +7,7 @@ const isLocalhost =
 const api = axios.create({
   baseURL: isLocalhost
     ? "http://localhost:5000/api"
-    : "https://event-management-2-luf7.onrender.com/api",
+    : "https://event-management-3-lrjb.onrender.com/api",
 });
 
 export default api;

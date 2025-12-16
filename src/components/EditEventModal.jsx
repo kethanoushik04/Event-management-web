@@ -15,9 +15,9 @@ const toLocalDatetime = (iso) => {
   if (!iso) return "";
   const d = new Date(iso);
   const pad = (n) => n.toString().padStart(2, "0");
-  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(
-    d.getDate()
-  )}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(
+    d.getHours()
+  )}:${pad(d.getMinutes())}`;
 };
 
 export default function EditEventModal({
@@ -31,12 +31,8 @@ export default function EditEventModal({
   const [selectedProfiles, setSelectedProfiles] = useState(
     () => event?.profiles?.map((p) => p._id) || []
   );
-  const [start, setStart] = useState(() =>
-    toLocalDatetime(event?.startDate)
-  );
-  const [end, setEnd] = useState(() =>
-    toLocalDatetime(event?.endDate)
-  );
+  const [start, setStart] = useState(() => toLocalDatetime(event?.startDate));
+  const [end, setEnd] = useState(() => toLocalDatetime(event?.endDate));
   const [timezone, setTimezone] = useState(event?.timezone || "IST");
 
   const [search, setSearch] = useState("");
@@ -67,12 +63,18 @@ export default function EditEventModal({
       return alert("End cannot be before Start");
 
     try {
-      const res = await API.put(`/events/${event._id}`, {
-        profiles: selectedProfiles,
-        startDate: start,
-        endDate: end,
-        timezone,
-      });
+      const res = await API.put(
+        `/events/${event._id}`,
+        {
+          profiles: selectedProfiles,
+          startDate: start,
+          endDate: end,
+          timezone,
+        },
+        {
+          withCredentials: true,
+        }
+      );
 
       onUpdated(res.data.event);
       onClose();
@@ -156,7 +158,7 @@ export default function EditEventModal({
           ))}
         </select>
 
-          <input
+        <input
           type="datetime-local"
           className="border rounded p-2 w-full mb-2"
           value={start}
@@ -170,10 +172,7 @@ export default function EditEventModal({
         />
 
         <div className="flex gap-2">
-          <button
-            onClick={onClose}
-            className="border px-4 py-2 rounded w-1/2"
-          >
+          <button onClick={onClose} className="border px-4 py-2 rounded w-1/2">
             Cancel
           </button>
           <button
